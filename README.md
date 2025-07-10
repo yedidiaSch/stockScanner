@@ -1,6 +1,6 @@
-# BackTesting and Stock Analysis Framework
+# BackTesting and Stock Analysis 
 
-This project provides a comprehensive framework for backtesting trading strategies, analyzing stock data, and generating actionable insights. It includes tools for fetching historical stock data, analyzing trading signals, generating fundamental reports, and sending email alerts for buy signals.
+This project provides a framework for backtesting trading strategies, analyzing stock data, and generating actionable insights. It includes tools for fetching historical stock data, analyzing trading signals, generating fundamental reports, and sending email alerts for buy signals.
 
 ## Features
 
@@ -13,7 +13,7 @@ This project provides a comprehensive framework for backtesting trading strategi
 ## Project Structure
 
 ```
-/home/yedidia/github/python/
+/stockScanner/
 ├── backTesting/
 │   ├── stats.py          # Summarizes backtesting results and generates reports.
 │   ├── manager.py        # Manages the backtesting process for multiple stocks.
@@ -30,8 +30,8 @@ This project provides a comprehensive framework for backtesting trading strategi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/yedidiaSch/stockScanner.git
+   cd stockScanner
    ```
 
 2. Install the required Python packages:
@@ -129,12 +129,4 @@ Contributions are welcome! Please follow these steps:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Contact
 
-For questions or feedback, please contact:
-- **Name**: Yedidia
-- **Email**: your_email@example.com
-
----
-
-Happy Backtesting! 📈
