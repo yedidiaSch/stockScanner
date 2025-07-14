@@ -1,6 +1,6 @@
 import yfinance as yf
 
-def fetch_data(tickers, period="6mo"):
+def fetch_data(tickers, period="2mo"):
     """
     Fetches historical stock data for a list of tickers.
 
