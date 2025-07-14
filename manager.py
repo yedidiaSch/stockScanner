@@ -68,9 +68,9 @@ def main():
             df_clean = extract_single_ticker_df(df, ticker)
             signals_list = analyze_stock(
                 df_clean,
-                volume_multiplier=5.0,         # Adjust volume multiplier as needed
-                breakout_days=7,               # Adjust breakout days as needed
-                max_days_old=1     # Adjust max days after breakout as needed
+                volume_multiplier=4.0,         # Adjust volume multiplier as needed
+                breakout_days=10,               # Adjust breakout days as needed
+                max_days_old=2    # Adjust max days after breakout as needed
             )
             if signals_list:
                 signals.append(ticker)
