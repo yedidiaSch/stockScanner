@@ -1,132 +1,209 @@
-# BackTesting and Stock Analysis 
+# Stock Scanner & Backtesting System
 
-This project provides a framework for backtesting trading strategies, analyzing stock data, and generating actionable insights. It includes tools for fetching historical stock data, analyzing trading signals, generating fundamental reports, and sending email alerts for buy signals.
+A comprehensive Python-based stock analysis and backtesting framework that identifies breakout trading opportunities, analyzes fundamentals, and provides automated email alerts.
 
-## Features
+## ✨ Key Features
 
-- **Backtesting**: Simulate trading strategies using historical data and generate performance summaries.
-- **Stock Analysis**: Identify buy signals based on breakout and volume criteria.
-- **Fundamental Analysis**: Generate detailed HTML reports for stock fundamentals, including EPS, P/E ratio, revenue, and more.
-- **Email Notifications**: Automatically send email alerts for identified buy signals.
-- **Data Fetching**: Download historical stock data for multiple tickers using Yahoo Finance.
+- **🔍 Advanced Stock Analysis**: Identifies buy signals based on price breakouts and volume spikes
+- **📊 Comprehensive Backtesting**: Simulate trading strategies with historical data and performance analytics  
+- **📈 Fundamental Analysis**: Generate detailed HTML reports with financial metrics and ratios
+- **📧 Automated Alerts**: Beautiful HTML email notifications for trading signals
+- **🌍 Multi-Market Support**: Supports stocks from major global exchanges
+- **⚡ Performance Optimized**: Efficient data processing with pandas vectorization
+- **🛡️ Robust Error Handling**: Comprehensive logging and graceful error management
+- **🎨 Modern Design**: Clean, responsive email templates and formatted console output
 
-## Project Structure
+## 🏗️ Architecture
 
 ```
-/stockScanner/
-├── backTesting/
-│   ├── stats.py          # Summarizes backtesting results and generates reports.
-│   ├── manager.py        # Manages the backtesting process for multiple stocks.
-│   ├── historyFetch.py   # Fetches historical stock data for backtesting.
-│   ├── analyzer.py       # Analyzes stock data to identify buy signals.
-├── fetcher.py            # Fetches historical stock data for analysis.
-├── fund.py               # Generates fundamental analysis reports for stocks.
-├── manager.py            # Main script for fetching data, analyzing signals, and sending alerts.
-├── notifier.py           # Sends email alerts for buy signals.
-└── README.md             # Project documentation.
+stockScanner/
+├── config.py              # Centralized configuration and constants
+├── analyzer.py            # Consolidated stock analysis engine  
+├── fetcher.py             # Data retrieval with error handling
+├── fund.py                # Fundamental analysis and reporting
+├── manager.py             # Main orchestration script
+├── notifier.py            # Enhanced email notification system
+├── backTesting/           # Backtesting framework
+│   ├── analyzer.py        # Lightweight wrapper for backtesting
+│   ├── manager.py         # Backtesting execution engine
+│   ├── historyFetch.py    # Historical data downloader
+│   └── stats.py           # Performance analytics and reporting
+├── requirements.txt       # Python dependencies
+└── README.md             # This file
 ```
 
-## Installation
+## 🚀 Quick Start
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yedidiaSch/stockScanner.git
-   cd stockScanner
-   ```
+### Installation
 
-2. Install the required Python packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Create a `.env` file in the project root with the following variables:
-   ```env
-   EMAIL_PASSWORD=your_email_password
-   SENDER_EMAIL=your_email@example.com
-   RECIPIENT_EMAIL=recipient_email@example.com
-   ```
-
-4. Prepare a `tickers.txt` file in the project root with a list of stock tickers (one per line).
-
-## Usage
-
-### 1. Fetch Historical Data
-Run the `historyFetch.py` script to download historical stock data:
 ```bash
-python backTesting/historyFetch.py
+# Clone the repository
+git clone https://github.com/yedidiaSch/stockScanner.git
+cd stockScanner
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create environment file
+cp .env.example .env
+# Edit .env with your email credentials
 ```
 
-### 2. Backtest Trading Strategies
-Run the `manager.py` script to backtest strategies and generate results:
-```bash
-python backTesting/manager.py
+### Configuration
+
+Create a `.env` file with your email settings:
+```env
+EMAIL_PASSWORD=your_app_password
+SENDER_EMAIL=your_email@gmail.com
+RECIPIENT_EMAIL=recipient@email.com
 ```
 
-### 3. Analyze Buy Signals
-Run the `manager.py` script in the root directory to fetch data, analyze signals, and send email alerts:
+Create a `tickers.txt` file with stock symbols (one per line):
+```
+AAPL
+MSFT
+GOOGL
+TSLA
+```
+
+## 📋 Usage Guide
+
+### 1. Real-time Signal Detection
+
 ```bash
 python manager.py
 ```
 
-### 4. Generate Fundamental Reports
-Use the `fund.py` script to generate HTML reports for stock fundamentals:
-```python
-from fund import get_fundamental_report
-html_report = get_fundamental_report("AAPL")
-print(html_report)
+Analyzes current market data, identifies breakout signals, and sends email alerts with fundamental analysis.
+
+### 2. Historical Data Collection
+
+```bash
+python backTesting/historyFetch.py
 ```
 
-## Outputs
+Downloads 5 years of historical data for backtesting.
 
-- **Backtesting Results**: CSV files summarizing trades and performance metrics.
-- **Summary Reports**: Global, market, year, and year-market performance summaries.
-- **Email Alerts**: Notifications for buy signals with detailed fundamental reports.
+### 3. Strategy Backtesting
 
-## Example Workflow
+```bash
+python backTesting/manager.py
+```
 
-1. Add stock tickers to `tickers.txt`:
-   ```
-   AAPL
-   MSFT
-   TSLA
-   ```
+Runs comprehensive backtesting with configurable parameters:
+- ATR-based stop losses and take profits
+- Trailing stop loss management
+- Multi-market analysis
 
-2. Fetch historical data:
-   ```bash
-   python backTesting/historyFetch.py
-   ```
+### 4. Performance Analytics
 
-3. Backtest strategies:
-   ```bash
-   python backTesting/manager.py
-   ```
+```bash
+python backTesting/stats.py
+```
 
-4. Analyze buy signals and send email alerts:
-   ```bash
-   python manager.py
-   ```
+Generates detailed performance reports:
+- Overall portfolio metrics
+- Market-by-market analysis  
+- Year-over-year performance
+- Win rates and risk metrics
 
-## Requirements
+## ⚙️ Configuration Options
 
-- Python 3.7+
-- Required Python packages:
-  - `pandas`
-  - `numpy`
-  - `yfinance`
-  - `python-dotenv`
-  - `smtplib`
+Key parameters in `config.py`:
 
-## Contributing
+```python
+# Trading Parameters
+DEFAULT_VOLUME_MULTIPLIER = 8.0    # Volume spike threshold
+DEFAULT_BREAKOUT_DAYS = 30         # Lookback period for breakouts
+DEFAULT_MAX_DAYS_OLD = 5           # Recent signals only
 
-Contributions are welcome! Please follow these steps:
+# Backtesting Parameters  
+ATR_MULTIPLE = 2.0                 # Stop loss distance
+TAKE_PROFIT_MULTIPLE = 4.0         # Take profit distance
+EXPIRY_DAYS = 10                   # Maximum hold period
+```
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes and push to your fork.
-4. Submit a pull request with a detailed description of your changes.
+## 📊 Output Examples
 
-## License
+### Email Alert
+- **Subject**: "📈 3 Trading Signals Alert"
+- **Content**: Styled HTML with signal list and fundamental reports
+- **Metrics**: EPS, P/E ratio, revenue growth, profit margins
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+### Console Output
+```
+📊 Portfolio Performance Summary:
+==================================================
+Total Trades:                    156
+Winning Trades:                   89
+Win Rate:                      57.1%
+Average % per trade:            2.34%
+Starting Capital:          ₪50,000
+Final Amount:              ₪73,245.67
+Total Return:               46.49%
+```
 
+## 🔧 Advanced Features
 
+### Custom Analysis Functions
+```python
+from analyzer import analyze_stock, get_recent_breakouts
+
+# Analyze last 7 days only
+signals = get_recent_breakouts(df, days=7)
+
+# Custom parameters
+signals = analyze_stock(
+    df,
+    volume_multiplier=6.0,
+    breakout_days=20,
+    max_days_old=3
+)
+```
+
+### Multi-Market Support
+Automatic market detection based on ticker suffixes:
+- `.NS` → India
+- `.L` → UK  
+- `.PA` → France
+- `.T` → Japan
+- (and many more)
+
+## 📈 Performance Optimizations
+
+- **Vectorized Operations**: Uses pandas for efficient data processing
+- **Memory Management**: Copies DataFrames to avoid side effects
+- **Batch Processing**: Handles multiple tickers efficiently
+- **Smart Caching**: Optimized rolling calculations
+- **Resource Cleanup**: Proper file and connection management
+
+## 🛡️ Error Handling
+
+- **Input Validation**: Comprehensive parameter checking
+- **Graceful Degradation**: Continues processing even if individual stocks fail
+- **Detailed Logging**: Structured logging with different severity levels
+- **Recovery Mechanisms**: Automatic retries and fallbacks where appropriate
+
+## 📝 Dependencies
+
+- **yfinance**: Stock data retrieval
+- **pandas**: Data manipulation and analysis
+- **numpy**: Numerical computations
+- **python-dotenv**: Environment variable management
+- **smtplib**: Email functionality (built-in)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your improvements
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ⚠️ Disclaimer
+
+This software is for educational and research purposes only. Trading involves risk and past performance does not guarantee future results. Always conduct your own research and consider consulting with financial professionals before making investment decisions.
