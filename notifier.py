@@ -2,67 +2,217 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def send_email_alert(
-    tickers,
-    html_reports,
-    recipient_email,
-    sender_email,
-    sender_password
-):
-    """
-    Sends an HTML email alert with symbols and their fundamental reports.
+import smtplib
+import logging
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from typing import List, Optional
+from config import EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT
 
-    Parameters:
-        tickers (list): List of stock symbols with buy signals.
-        html_reports (list): List of HTML report strings (same order as tickers).
-        recipient_email (str): Email address of the recipient.
-        sender_email (str): Email address of the sender.
-        sender_password (str): Password for the sender's email account.
-    """
-    if not tickers:
-        return
+logger = logging.getLogger(__name__)
 
-    # Construct the HTML body
+
+def validate_email_inputs(tickers: List[str], html_reports: List[str], 
+                         recipient_email: str, sender_email: str, sender_password: str) -> None:
+    """Validate email inputs."""
+    if not isinstance(tickers, list) or not tickers:
+        raise ValueError("tickers must be a non-empty list")
+    
+    if not isinstance(html_reports, list):
+        raise ValueError("html_reports must be a list")
+    
+    if len(html_reports) != len(tickers):
+        raise ValueError("html_reports length must match tickers length")
+    
+    for email in [recipient_email, sender_email]:
+        if not email or "@" not in email:
+            raise ValueError(f"Invalid email address: {email}")
+    
+    if not sender_password:
+        raise ValueError("sender_password cannot be empty")
+
+
+def create_html_email_body(tickers: List[str], html_reports: List[str]) -> str:
+    """Create styled HTML email body."""
     html = """
     <html>
     <head>
+    <meta charset="UTF-8">
     <style>
-      body { font-family: Arial, sans-serif; }
-      table { border-collapse: collapse; width: 80%; margin-bottom:20px; }
-      th, td { border: 1px solid #ddd; padding: 6px; }
-      th { background-color: #4CAF50; color: white; }
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .signal-list {
+        background: #f8f9fa;
+        border-left: 4px solid #28a745;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .signal-item {
+        display: inline-block;
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        margin: 3px;
+        border-radius: 15px;
+        font-weight: bold;
+      }
+      table { 
+        border-collapse: collapse; 
+        width: 100%; 
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      th, td { 
+        border: 1px solid #ddd; 
+        padding: 12px; 
+        text-align: left;
+      }
+      th { 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      .report-section {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #6c757d;
+        font-size: 0.9em;
+        border-top: 1px solid #e9ecef;
+        margin-top: 30px;
+      }
     </style>
     </head>
     <body>
     """
 
-    html += "<h2>📈 Buy Signals Alert</h2>"
-    html += "<p><b>Symbols with signals:</b></p>"
-    html += "<ul>"
-    for t in tickers:
-        html += f"<li>{t}</li>"
-    html += "</ul><hr>"
+    html += """
+    <div class="header">
+        <h1>📈 Trading Signals Alert</h1>
+        <p>New breakout opportunities detected!</p>
+    </div>
+    """
 
-    for report in html_reports:
-        html += report + "<hr>"
+    html += '<div class="signal-list">'
+    html += '<h3>🎯 Stocks with Buy Signals:</h3>'
+    for ticker in tickers:
+        html += f'<span class="signal-item">{ticker}</span>'
+    html += '</div>'
 
-    html += "</body></html>"
+    # Add each report in its own section
+    for i, report in enumerate(html_reports):
+        if report and report.strip():
+            html += f'<div class="report-section">{report}</div>'
+        else:
+            html += f'<div class="report-section"><p>Report unavailable for {tickers[i]}</p></div>'
 
-    # Create the email
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = "📈 Trading Signals and Fundamentals"
-    msg["From"] = sender_email
-    msg["To"] = recipient_email
+    html += """
+    <div class="footer">
+        <p>⚠️ This is an automated alert. Please conduct your own research before making investment decisions.</p>
+        <p>Generated by Stock Scanner System</p>
+    </div>
+    </body></html>
+    """
 
-    text_part = MIMEText("Signals: " + ", ".join(tickers), "plain")
-    html_part = MIMEText(html, "html")
+    return html
 
-    msg.attach(text_part)
-    msg.attach(html_part)
 
-    # Send the email
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(sender_email, sender_password)
-        server.send_message(msg)
+def send_email_alert(
+    tickers: List[str],
+    html_reports: List[str],
+    recipient_email: str,
+    sender_email: str,
+    sender_password: str
+) -> None:
+    """
+    Sends an HTML email alert with symbols and their fundamental reports.
 
-    print("Email sent.")
+    Parameters:
+        tickers (List[str]): List of stock symbols with buy signals.
+        html_reports (List[str]): List of HTML report strings (same order as tickers).
+        recipient_email (str): Email address of the recipient.
+        sender_email (str): Email address of the sender.
+        sender_password (str): Password for the sender's email account.
+        
+    Raises:
+        ValueError: If inputs are invalid.
+        SMTPException: If email sending fails.
+    """
+    try:
+        # Validate inputs
+        validate_email_inputs(tickers, html_reports, recipient_email, sender_email, sender_password)
+        
+        logger.info(f"Preparing email alert for {len(tickers)} signals")
+
+        # Create the HTML body
+        html_body = create_html_email_body(tickers, html_reports)
+
+        # Create the email message
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"📈 {len(tickers)} Trading Signal{'s' if len(tickers) > 1 else ''} Alert"
+        msg["From"] = sender_email
+        msg["To"] = recipient_email
+
+        # Create plain text version
+        text_content = f"""
+Trading Signals Alert
+
+Stocks with buy signals: {', '.join(tickers)}
+
+This is an automated alert from your Stock Scanner System.
+Please conduct your own research before making investment decisions.
+        """.strip()
+
+        text_part = MIMEText(text_content, "plain")
+        html_part = MIMEText(html_body, "html")
+
+        msg.attach(text_part)
+        msg.attach(html_part)
+
+        # Send the email
+        logger.info(f"Connecting to {EMAIL_SMTP_SERVER}:{EMAIL_SMTP_PORT}")
+        
+        with smtplib.SMTP_SSL(EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT, timeout=30) as server:
+            try:
+                server.login(sender_email, sender_password)
+                server.send_message(msg)
+                logger.info("Email alert sent successfully")
+                
+            except smtplib.SMTPAuthenticationError as e:
+                logger.error("Email authentication failed - check credentials")
+                raise
+            except smtplib.SMTPRecipientsRefused as e:
+                logger.error(f"Recipient email rejected: {recipient_email}")
+                raise
+            except Exception as e:
+                logger.error(f"SMTP error: {e}")
+                raise
+
+    except Exception as e:
+        logger.error(f"Failed to send email alert: {e}")
+        raise
