@@ -1,19 +1,19 @@
-# Stock Scanner & Backtesting System
+# Stock Scanner and Backtesting System
 
 A comprehensive Python-based stock analysis and backtesting framework that identifies breakout trading opportunities, analyzes fundamentals, and provides automated email alerts.
 
-## ✨ Key Features
+## Key Features
 
-- **🔍 Advanced Stock Analysis**: Identifies buy signals based on price breakouts and volume spikes
-- **📊 Comprehensive Backtesting**: Simulate trading strategies with historical data and performance analytics  
-- **📈 Fundamental Analysis**: Generate detailed HTML reports with financial metrics and ratios
-- **📧 Automated Alerts**: Beautiful HTML email notifications for trading signals
-- **🌍 Multi-Market Support**: Supports stocks from major global exchanges
-- **⚡ Performance Optimized**: Efficient data processing with pandas vectorization
-- **🛡️ Robust Error Handling**: Comprehensive logging and graceful error management
-- **🎨 Modern Design**: Clean, responsive email templates and formatted console output
+- **Advanced Stock Analysis**: Identifies buy signals based on price breakouts and volume spikes
+- **Comprehensive Backtesting**: Simulate trading strategies with historical data and performance analytics  
+- **Fundamental Analysis**: Generate detailed HTML reports with financial metrics and ratios
+- **Automated Alerts**: HTML email notifications for trading signals
+- **Multi-Market Support**: Supports stocks from major global exchanges
+- **Performance Optimized**: Efficient data processing with pandas vectorization
+- **Robust Error Handling**: Comprehensive logging and graceful error management
+- **Modern Design**: Clean, responsive email templates and formatted console output
 
-## 🏗️ Architecture
+## Project Architecture
 
 ```
 stockScanner/
@@ -32,7 +32,7 @@ stockScanner/
 └── README.md             # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -66,7 +66,7 @@ GOOGL
 TSLA
 ```
 
-## 📋 Usage Guide
+## Usage Guide
 
 ### 1. Real-time Signal Detection
 
@@ -107,7 +107,7 @@ Generates detailed performance reports:
 - Year-over-year performance
 - Win rates and risk metrics
 
-## ⚙️ Configuration Options
+## Configuration Options
 
 Key parameters in `config.py`:
 
@@ -123,16 +123,16 @@ TAKE_PROFIT_MULTIPLE = 4.0         # Take profit distance
 EXPIRY_DAYS = 10                   # Maximum hold period
 ```
 
-## 📊 Output Examples
+## Output Examples
 
 ### Email Alert
-- **Subject**: "📈 3 Trading Signals Alert"
+- **Subject**: "Trading Signals Alert"
 - **Content**: Styled HTML with signal list and fundamental reports
 - **Metrics**: EPS, P/E ratio, revenue growth, profit margins
 
 ### Console Output
 ```
-📊 Portfolio Performance Summary:
+Portfolio Performance Summary:
 ==================================================
 Total Trades:                    156
 Winning Trades:                   89
@@ -143,7 +143,7 @@ Final Amount:              ₪73,245.67
 Total Return:               46.49%
 ```
 
-## 🔧 Advanced Features
+## Advanced Features
 
 ### Custom Analysis Functions
 ```python
@@ -169,7 +169,7 @@ Automatic market detection based on ticker suffixes:
 - `.T` → Japan
 - (and many more)
 
-## 📈 Performance Optimizations
+## Performance Optimizations
 
 - **Vectorized Operations**: Uses pandas for efficient data processing
 - **Memory Management**: Copies DataFrames to avoid side effects
@@ -177,14 +177,14 @@ Automatic market detection based on ticker suffixes:
 - **Smart Caching**: Optimized rolling calculations
 - **Resource Cleanup**: Proper file and connection management
 
-## 🛡️ Error Handling
+## Error Handling
 
 - **Input Validation**: Comprehensive parameter checking
 - **Graceful Degradation**: Continues processing even if individual stocks fail
 - **Detailed Logging**: Structured logging with different severity levels
 - **Recovery Mechanisms**: Automatic retries and fallbacks where appropriate
 
-## 📝 Dependencies
+## Dependencies
 
 - **yfinance**: Stock data retrieval
 - **pandas**: Data manipulation and analysis
@@ -192,7 +192,7 @@ Automatic market detection based on ticker suffixes:
 - **python-dotenv**: Environment variable management
 - **smtplib**: Email functionality (built-in)
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -200,10 +200,10 @@ Automatic market detection based on ticker suffixes:
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 This software is for educational and research purposes only. Trading involves risk and past performance does not guarantee future results. Always conduct your own research and consider consulting with financial professionals before making investment decisions.
