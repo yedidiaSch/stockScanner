@@ -51,9 +51,7 @@ def fetch_data(tickers: List[str], period: str = DEFAULT_PERIOD) -> Dict:
                 ticker, 
                 period=period, 
                 interval=DEFAULT_INTERVAL, 
-                auto_adjust=True,
-                progress=False,  # Disable progress bar for cleaner logs
-                show_errors=False  # Handle errors manually
+                progress=False
             )
 
             # Validate the downloaded data
